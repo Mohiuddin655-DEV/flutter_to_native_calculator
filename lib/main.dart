@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:js' as js;
+import 'dart:js' as js show context;
 
 void main() {
   runApp(const MyApp());
