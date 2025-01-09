@@ -40,11 +40,12 @@ import UIKit
 
     // MARK: - Method Channel Setup
     private func setupCalculatorChannel(_ controller: FlutterViewController) {
-        let calculatorChannel = FlutterMethodChannel(
+        let channel = FlutterMethodChannel(
             name: "com.example.calculator/math",
-            binaryMessenger: controller.binaryMessenger)
+            binaryMessenger: controller.binaryMessenger
+        )
 
-        calculatorChannel.setMethodCallHandler { [weak self] call, result in
+        channel.setMethodCallHandler { [weak self] call, result in
             self?.handleCalculatorMethod(call, result: result)
         }
     }
