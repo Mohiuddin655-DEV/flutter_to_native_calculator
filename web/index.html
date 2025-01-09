@@ -29,8 +29,41 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>flutter_to_native_calculator</title>
+  <title>Native Calculator</title>
   <link rel="manifest" href="manifest.json">
+  <script>
+    // Create calculator object to hold our methods
+    const calculator = {
+        add: (number1, number2) => number1 + number2,
+        subtract: (number1, number2) => number1 - number2,
+        multiply: (number1, number2) => number1 * number2,
+        divide: (number1, number2) => {
+            if (number2 === 0) {
+                throw new Error('Cannot divide by zero');
+            }
+            return number1 / number2;
+        },
+        modulo: (number1, number2) => {
+            if (number2 === 0) {
+                throw new Error('Cannot calculate modulo with zero');
+            }
+            return number1 % number2;
+        }
+    };
+
+    // Function to handle calculation requests from Flutter
+    function calculate(operation, number1, number2) {
+        try {
+            if (typeof calculator[operation] !== 'function') {
+                throw new Error('Invalid operation');
+            }
+            const result = calculator[operation](number1, number2);
+            return { success: true, result: result };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    }
+  </script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>

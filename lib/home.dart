@@ -16,24 +16,23 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const CalculatorScreen(),
+      home: const HomePage(),
     );
   }
 }
 
-class CalculatorScreen extends StatefulWidget {
-  const CalculatorScreen({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<CalculatorScreen> createState() => _CalculatorScreenState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _CalculatorScreenState extends State<CalculatorScreen> {
+class _HomePageState extends State<HomePage> {
   final TextEditingController _number1Controller = TextEditingController();
   final TextEditingController _number2Controller = TextEditingController();
   String _result = 'Result: ';
 
-  // Method channel for native communication
   static const platform = MethodChannel('com.example.calculator/math');
 
   Future<void> _performOperation(String operation) async {
@@ -86,7 +85,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         title: const Text('Native Calculator'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -94,16 +93,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               controller: _number1Controller,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Enter the first number',
+                labelText: 'Number 1',
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 16),
             TextField(
               controller: _number2Controller,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Enter the second number',
+                labelText: 'Number 2',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -135,7 +134,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () => _performOperation('modulo'),
-                  child: const Text('Modulus'),
+                  child: const Text('Modulo'),
                 ),
               ],
             ),
