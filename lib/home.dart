@@ -1,25 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'dart:js' as js;
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Native Calculator',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomePage(),
-    );
-  }
-}
+import 'platform_interface.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,47 +14,23 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _number2Controller = TextEditingController();
   String _result = 'Result: ';
 
-  static const platform = MethodChannel('com.example.calculator/math');
-
   Future<void> _performOperation(String operation) async {
     try {
       final double num1 = double.parse(_number1Controller.text);
       final double num2 = double.parse(_number2Controller.text);
 
-      // Check if running on web
-      if (identical(0, 0.0)) {
-        // Web implementation
-        final result = js.context.callMethod('calculate', [operation, num1, num2]);
+      final double result = await CalculatorPlatform.instance.calculate(
+        operation: operation,
+        number1: num1,
+        number2: num2,
+      );
 
-        if (result['success'] == true) {
-          setState(() {
-            _result = 'Result: ${result['result']}';
-          });
-        } else {
-          setState(() {
-            _result = 'Error: ${result['error']}';
-          });
-        }
-      } else {
-        // Mobile implementation
-        final Map<String, dynamic> arguments = {
-          'number1': num1,
-          'number2': num2,
-          'operation': operation,
-        };
-
-        final double result = await platform.invokeMethod('calculate', arguments);
-        setState(() {
-          _result = 'Result: $result';
-        });
-      }
-    } on PlatformException catch (e) {
       setState(() {
-        _result = 'Error: ${e.message}';
+        _result = 'Result: $result';
       });
     } catch (e) {
       setState(() {
-        _result = 'Error: Invalid input';
+        _result = 'Error: ${e.toString()}';
       });
     }
   }
@@ -85,7 +42,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text('Native Calculator'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(32.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -93,16 +50,16 @@ class _HomePageState extends State<HomePage> {
               controller: _number1Controller,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Number 1',
+                labelText: 'Enter the first number',
                 border: OutlineInputBorder(),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 32),
             TextField(
               controller: _number2Controller,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Number 2',
+                labelText: 'Enter the second number',
                 border: OutlineInputBorder(),
               ),
             ),
@@ -134,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 ElevatedButton(
                   onPressed: () => _performOperation('modulo'),
-                  child: const Text('Modulo'),
+                  child: const Text('Modulus'),
                 ),
               ],
             ),
